@@ -31,6 +31,9 @@ export default function Login() {
                             email: [response.data.message]
                         });
                     }
+                } else {
+                    console.error(err);
+                    alert("An error occurred: " + (response ? response.status + ' ' + response.statusText : err.message));
                 }
             })
     }

@@ -1,37 +1,30 @@
-import { Outlet, Navigate, Link } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProviders";
+import Sidebar from "./Sidebar";
 
 export default function MainLayout() {
-    const { user, token, setUser, setToken } = useStateContext()
+    const { token, user } = useStateContext();
 
     if (!token) {
         return <Navigate to='/auth/login' />
     }
 
-    const onLogout = (ev) => {
-        ev.preventDefault()
-        // axiosClient.post('/logout') // We would normally call API here
-        setUser({})
-        setToken(null)
-    }
-
     return (
-        <div id="mainLayout">
-            <aside>
-                <Link to="/dashboard">Dashboard</Link>
-                <Link to="/users">Users</Link>
-            </aside>
-            <div className="content">
-                <header>
-                    <div>
-                        Header
+        <div id="mainLayout" className="premium-layout">
+            <Sidebar />
+            <div className="main-content">
+                <header className="premium-header">
+                    <div className="header-title">
+                        Меню Кофе
                     </div>
-                    <div>
-                        {user.name}
-                        <a href="#" onClick={onLogout} className="btn-logout">Logout</a>
+                    <div className="user-badge">
+                        <span>{user?.name || 'Гость'}</span>
+                        <div className="avatar-small">
+                            <img src={`https://ui-avatars.com/api/?name=${user?.name || 'User'}&background=random`} alt="" />
+                        </div>
                     </div>
                 </header>
-                <main>
+                <main className="content-area">
                     <Outlet />
                 </main>
             </div>

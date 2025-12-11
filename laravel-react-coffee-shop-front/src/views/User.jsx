@@ -1,20 +1,19 @@
 import React from 'react';
+import { useStateContext } from "../contexts/ContextProviders";
 
 export default function User() {
+    const { user } = useStateContext();
     return (
         <div className="user-profile-container">
             <div className="profile-header-card">
                 <div className="profile-cover"></div>
-                <div className="profile-avatar-section">
+                <div className="profile-avatar-section" style={{ alignItems: 'flex-start' }}>
                     <div className="profile-avatar">
                         <img src="https://ui-avatars.com/api/?name=User+Name&background=random" alt="Avatar" />
                     </div>
-                    <div className="profile-info">
-                        <h1>София Алексеева</h1>
-                        <p>Кофеман | ID: 994221</p>
-                    </div>
-                    <div className="profile-actions">
-                        <button className="btn-edit">Редактировать</button>
+                    <div className="profile-info" style={{ paddingTop: '55px' }}>
+                        <h1>{user.name}</h1>
+                        <p>Кофеман | ID: {user.id}</p>
                     </div>
                 </div>
             </div>
@@ -39,15 +38,15 @@ export default function User() {
                 <div className="details-grid">
                     <div className="detail-item">
                         <label>E-mail</label>
-                        <p>sofiya@example.com</p>
+                        <p>{user.email}</p>
                     </div>
                     <div className="detail-item">
                         <label>Телефон</label>
-                        <p>+1 234 567 890</p>
+                        <p>Не указан</p>
                     </div>
                     <div className="detail-item">
                         <label>Дата регистрации</label>
-                        <p>Январь 2024</p>
+                        <p>{user.created_at}</p>
                     </div>
                 </div>
             </div>

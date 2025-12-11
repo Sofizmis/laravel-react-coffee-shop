@@ -1,14 +1,18 @@
 import { Link, useLocation } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProviders";
+import axiosClient from "../axios-client.js";
 
 export default function Sidebar() {
-    const { setUser, setToken } = useStateContext();
+    const { setUser, setToken, token, user } = useStateContext();
     const location = useLocation();
 
     const onLogout = (ev) => {
         ev.preventDefault()
-        setUser({})
-        setToken(null)
+        axiosClient.post('/logout')
+            .then(() => {
+                setUser({})
+                setToken(null)
+            })
     }
 
     return (
@@ -17,9 +21,33 @@ export default function Sidebar() {
                 ☕ CoffeLove
             </div>
             <nav>
-                <Link to="/user/info" className={`nav-link ${location.pathname.startsWith('/user') ? 'active' : ''}`}>Профиль</Link>
-                <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>Главная</Link>
-                <a href="#" onClick={onLogout} className="nav-link">Выйти</a>
+                <Link
+                    to="/user"
+                    className={`nav-link ${location.pathname.startsWith('/user') ? 'active' : ''}`}
+                >
+                    {user.name}
+                </Link>
+                <Link
+                    to="/"
+                    className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+                >
+                    Меню
+                </Link>
+                {
+                    !token ?
+                        <Link
+                            to="/auth/login"
+                            className="nav-link">
+                            Вход
+                        </Link>
+                        :
+                        <a
+                            href="#"
+                            className="nav-link"
+                            onClick={(ev) => onLogout(ev)}>
+                            Выход
+                        </a>
+                }
             </nav>
         </aside>
     )

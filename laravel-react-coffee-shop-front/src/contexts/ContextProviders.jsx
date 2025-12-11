@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import axiosClient from "../axios-client.js";
 const StateContext = createContext({
     currentUser: null,
     token: null,
@@ -17,6 +18,21 @@ export const ContextProvider = ({ children }) => {
             localStorage.removeItem('ACCESS_TOKEN');
         }
     }
+
+    useEffect(() => {
+        if (token) {
+            axiosClient.get('/user')
+                .then(({ data }) => {
+                    setUser(data)
+                })
+                .catch(() => {
+                    _setToken(null)
+                    setUser({})
+                    localStorage.removeItem('ACCESS_TOKEN')
+                })
+        }
+    }, [token])
+
     return (
         <StateContext.Provider value={{
             user,
@@ -28,4 +44,5 @@ export const ContextProvider = ({ children }) => {
         </StateContext.Provider>
     )
 }
+// eslint-disable-next-line react-refresh/only-export-components
 export const useStateContext = () => useContext(StateContext)
